@@ -1,0 +1,12 @@
+# nvim.cmd has to reach Windows with CRLF line endings (cmd.exe can misread
+# goto labels in an LF-only batch file). -text stores the bytes exactly as
+# committed, so a clone and GitHub's Download ZIP both deliver CRLF.
+*.cmd -text
+# Neovim itself (the official releases, unpacked): keep every byte as shipped
+nvim-win64/** -text
+nvim-macos-arm64/** -text
+# the Mac launcher is a shell script: it must reach a Mac with LF endings,
+# whatever a Windows checkout would do to text files
+*.command -text
+# the prebuilt org parser: never convert or diff
+*.so binary
