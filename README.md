@@ -24,7 +24,7 @@ Return. After that, double-click `nvim.command`. A downloaded copy is
 quarantined, so Finder will not open `nvim.command` until it has run once;
 that first run clears the mark from this folder and changes nothing else.
 
-**Linux** (x86_64): no Neovim is bundled for Linux, so use the distro's own,
+**Linux** (x86_64 or ARM64): no Neovim is bundled for Linux, so use the distro's own,
 0.12 or newer. Clone this repo and link the config:
 `ln -s ~/normal-mode/nvim ~/.config/nvim`. A plain `nvim` is then the kit.
 
@@ -88,6 +88,7 @@ The launcher picks it up; the org parser already covers both.
 | `nvim/pack/kit/start/orgmode/parser/org.so` | the org parser for Windows (tree-sitter-org 2.0.4, x64) |
 | `nvim/org-parser/org-macos.so` | the same parser for macOS, Apple Silicon and Intel in one file, macOS 11 and up |
 | `nvim/org-parser/org-linux-x86_64.so` | the same parser for Linux x86_64 (glibc) |
+| `nvim/org-parser/org-linux-aarch64.so` | the same parser for Linux on ARM64 (glibc), such as an Apple Silicon Mac running Asahi |
 
 If something did not load, startup says so in lines starting `nvim kit:`.
 Silence means everything loaded. If the machine refuses to run the bundled
@@ -120,6 +121,7 @@ it was built on or newer. On Linux:
 
 ```sh
 cc -shared -fPIC -Os -std=c11 -I./src src/parser.c src/scanner.c -o org-linux-x86_64.so
+aarch64-linux-gnu-gcc -shared -fPIC -Os -std=c11 -I./src src/parser.c src/scanner.c -o org-linux-aarch64.so
 ```
 
 ## License

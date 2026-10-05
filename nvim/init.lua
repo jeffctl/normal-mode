@@ -1959,10 +1959,11 @@ local function org_setup()
   -- process that tries to load it). On macOS, register the Mac build first
   -- (one file for Apple Silicon and Intel, macOS 11 and up); after that
   -- nothing loads the Windows file. If the Mac one will not load, stop here,
-  -- before orgmode reaches for the other file itself. Linux (x86_64) works
-  -- the same way with its own build.
+  -- before orgmode reaches for the other file itself. Linux works the same
+  -- way with one build per CPU: x86_64, and aarch64 for an Apple Silicon Mac
+  -- running Linux. uname names the CPU the same way the files do.
   if not is_win then
-    local own = vim.fs.joinpath(config_dir, 'org-parser', vim.fn.has('linux') == 1 and 'org-linux-x86_64.so' or 'org-macos.so')
+    local own = vim.fs.joinpath(config_dir, 'org-parser', vim.fn.has('linux') == 1 and ('org-linux-%s.so'):format(vim.uv.os_uname().machine) or 'org-macos.so')
     local ok, loaded, err = pcall(vim.treesitter.language.add, 'org', { path = own })
     if not ok or not loaded then
       local why = tostring(err or loaded):gsub('^.-%.lua:%d+: ', '')
