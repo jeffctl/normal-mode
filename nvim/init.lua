@@ -13,9 +13,10 @@
 --
 --  Org mode needs a compiled tree-sitter parser and a locked-down machine
 --  has no compiler, so prebuilt ones ship here: Windows in the orgmode
---  folder, Mac in org-parser\ (see the README). This file checks the parser
---  BEFORE orgmode starts. If it will not load, orgmode is skipped and you are
---  told why, instead of orgmode trying to download and compile a new one.
+--  folder, Mac and Linux in org-parser\ (see the README). This file checks
+--  the parser BEFORE orgmode starts. If it will not load, orgmode is skipped
+--  and you are told why, instead of orgmode trying to download and compile a
+--  new one.
 --
 --  An error in a Lua config stops the rest of the file, so keybindings come
 --  first and every plugin is set up inside try(). Whatever goes wrong is
@@ -1958,9 +1959,10 @@ local function org_setup()
   -- process that tries to load it). On macOS, register the Mac build first
   -- (one file for Apple Silicon and Intel, macOS 11 and up); after that
   -- nothing loads the Windows file. If the Mac one will not load, stop here,
-  -- before orgmode reaches for the other file itself.
+  -- before orgmode reaches for the other file itself. Linux (x86_64) works
+  -- the same way with its own build.
   if not is_win then
-    local own = vim.fs.joinpath(config_dir, 'org-parser', 'org-macos.so')
+    local own = vim.fs.joinpath(config_dir, 'org-parser', vim.fn.has('linux') == 1 and 'org-linux-x86_64.so' or 'org-macos.so')
     local ok, loaded, err = pcall(vim.treesitter.language.add, 'org', { path = own })
     if not ok or not loaded then
       local why = tostring(err or loaded):gsub('^.-%.lua:%d+: ', '')

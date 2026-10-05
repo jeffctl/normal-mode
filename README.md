@@ -24,10 +24,14 @@ Return. After that, double-click `nvim.command`. A downloaded copy is
 quarantined, so Finder will not open `nvim.command` until it has run once;
 that first run clears the mark from this folder and changes nothing else.
 
+**Linux** (x86_64): no Neovim is bundled for Linux, so use the distro's own,
+0.12 or newer. Clone this repo and link the config:
+`ln -s ~/normal-mode/nvim ~/.config/nvim`. A plain `nvim` is then the kit.
+
 A launch with no file opens your day: today with its hours, then Overdue,
 Coming up, Started, In progress, Waiting / blocked, To do (no date),
 Someday / deferred and Completed. Your org files live in
-`C:\Users\<you>\org` on Windows and `~/org` on a Mac; the folder and an
+`C:\Users\<you>\org` on Windows and `~/org` on a Mac or Linux; the folder and an
 `inbox.org` are created on the first launch. Every `.org` file in it feeds
 the agenda. Files save themselves: when you leave insert mode, and a moment
 after any change.
@@ -83,6 +87,7 @@ The launcher picks it up; the org parser already covers both.
 | `nvim/pack/kit/start/` | the plugins, vendored: nvim-orgmode, catppuccin, nvim-tree, mini.pick, mini.clue, mini.files |
 | `nvim/pack/kit/start/orgmode/parser/org.so` | the org parser for Windows (tree-sitter-org 2.0.4, x64) |
 | `nvim/org-parser/org-macos.so` | the same parser for macOS, Apple Silicon and Intel in one file, macOS 11 and up |
+| `nvim/org-parser/org-linux-x86_64.so` | the same parser for Linux x86_64 (glibc) |
 
 If something did not load, startup says so in lines starting `nvim kit:`.
 Silence means everything loaded. If the machine refuses to run the bundled
@@ -111,7 +116,11 @@ zig cc -target x86_64-windows-gnu -shared -Os -std=c11 -I src src/parser.c src/s
 ```
 
 `-mmacosx-version-min` matters: without it the file only loads on the macOS
-it was built on or newer.
+it was built on or newer. On Linux:
+
+```sh
+cc -shared -fPIC -Os -std=c11 -I./src src/parser.c src/scanner.c -o org-linux-x86_64.so
+```
 
 ## License
 
